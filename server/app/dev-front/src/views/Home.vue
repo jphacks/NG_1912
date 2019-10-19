@@ -1,68 +1,50 @@
 <template>
-    <div class="container mt-4">
-        <button type="button" class="btn btn-primary">Categories</button>
+    <b-container class="mt-5">
+        <h2 class="font-weight-normal mb-3">注文履歴</h2>
 
-        <div id="info" class="row mt-3 mb-5">
-            <div class="col-8 border pt-3 pb-3">
-                <p class="font-weight-bold">おすすめのコース</p>
-                <div id="recommend-card" class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">test</h5>
-                        <p class="card-text">test</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-4 border pt-3 pb-3">
-                <p class="font-weight-bold">投稿Q&A一覧</p>
-
-                <div id="q_and_a-cards">
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">test</h5>
-                            <p class="card-text">test</p>
-                            <small>2019/06/30</small>
-                        </div>
-                    </div>
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">test</h5>
-                            <p class="card-text">test</p>
-                            <small>2019/06/30</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div v-for="payment in payments" class="custom-border mt-3">
+            <b-card-header>
+                <b-row>
+                    <b-col cols="6">
+                        合計&nbsp;:&nbsp;
+                        <span v-if="payment.is_completed" class="font-weight-bold"><span class="text-info h2">&nbsp;{{ Math.floor( payment.price * (1 + payment.tax_rate / 100)) }}&nbsp;</span><small>円&nbsp;(税込)</small></span>
+                        <span v-else class="font-weight-bold"><span class="text-warning h2">&nbsp;{{ Math.floor( payment.price * (1 + payment.tax_rate / 100)) }}&nbsp;</span><small>円&nbsp;(税込)</small></span>
+                    </b-col>
+                    <b-col cols="6">
+                        税率&nbsp;:&nbsp;
+                        <span v-if="payment.is_completed" class="font-weight-bold"><span class="text-info h2">&nbsp;{{ payment.tax_rate }}&nbsp;</span><small>&#37;</small></span>
+                        <span v-else class="font-weight-bold"><span class="text-warning h2">&nbsp;{{ payment.tax_rate }}&nbsp;</span><small>&#37;</small></span>
+                    </b-col>
+                </b-row>
+            </b-card-header>
+            <b-list-group flush>
+                <b-list-group-item v-for="choice in payment.choices">{{ choice.food.name }}&nbsp;:&nbsp;{{ choice.food.price }}&nbsp;円&nbsp;&times;&nbsp;{{ choice.food_count }}&nbsp;=&nbsp;{{ choice.price }}&nbsp;円</b-list-group-item>
+            </b-list-group>
         </div>
 
-
-    </div>
+    </b-container>
 </template>
 
 <script>
     import { mapGetters } from "vuex"
     import {
-        FETCH_SUBSCRIBE_COURSES,
+        FETCH_PAYMENTS,
     } from "@/store/actions.type";
 
     export default {
         name: "Home",
         mounted() {
-            this.$store.dispatch(FETCH_SUBSCRIBE_COURSES);
+            this.$store.dispatch(FETCH_PAYMENTS);
         },
         computed: {
-            ...mapGetters([])
+            ...mapGetters(["payments"])
         }
     }
 </script>
 
 <style scoped lang="scss">
-    #recommend-card{
-        height: 250px;
-    }
-
-    #q_and_a-cards{
-        height: 250px;
-        overflow: auto;
+    .custom-border{
+        border: 1px solid rgba(0, 0, 0, 0.125);
+        border-radius: 0.25rem;
     }
 </style>

@@ -19,6 +19,7 @@ class PaymentChoiceSerializer(serializers.HyperlinkedModelSerializer):
 
 class PaymentSerializer(serializers.HyperlinkedModelSerializer):
     choices = serializers.SerializerMethodField()
+    price = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Payment

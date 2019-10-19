@@ -7,9 +7,9 @@ from app.api.users.views import UserViewSet
 app_name = "api"
 
 router = routers.DefaultRouter()
-router.register('foods', FoodViewSet)
+# router.register('foods', FoodViewSet)
 router.register('payments', PaymentViewSet)
-router.register('users', UserViewSet)
+# router.register('users', UserViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),

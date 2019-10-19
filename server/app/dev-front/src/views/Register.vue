@@ -152,7 +152,6 @@
 
 <style scoped lang="scss">
     .user-form{
-        height: calc(100vh - 56px);
         margin-top: 60px;
         margin-bottom: 60px;
         form{

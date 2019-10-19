@@ -1,7 +1,7 @@
 <template>
     <b-navbar id="header" toggleable="lg" type="dark" variant="info">
-        <b-navbar-brand v-if="!isAuthenticated" :to="{name: 'root'}">zesei</b-navbar-brand>
-        <b-navbar-brand v-else :to="{name: 'home'}">zesei</b-navbar-brand>
+        <b-navbar-brand v-if="!isAuthenticated" :to="{name: 'root'}">ZESEI</b-navbar-brand>
+        <b-navbar-brand v-else :to="{name: 'home'}">ZESEI</b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -15,11 +15,10 @@
             <ul v-else class="navbar-nav">
                 <li class="nav-item"><span class="navbar-text font-weight-bold">{{ currentUser.username }} さん</span></li>
                 <li class="nav-item"><router-link :to="{name: 'user'}" class="nav-link">プロフィール更新</router-link></li>
-                <li class="nav-item"><a class="nav-link" @click="logout">ログアウト</a></li>
+                <li class="nav-item"><a id="logout" class="nav-link" @click="logout">ログアウト</a></li>
             </ul>
         </b-collapse>
     </b-navbar>
-
 </template>
 
 <script>
@@ -39,3 +38,8 @@
         }
     }
 </script>
+<style scoped lang="scss">
+    #logout{
+        cursor: pointer;
+    }
+</style>

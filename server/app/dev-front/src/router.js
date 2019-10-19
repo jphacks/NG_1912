@@ -32,9 +32,13 @@ export default new Router({
       meta: { isPublic: true }
     },
     {
-      path: "/terms",
-      name: "terms",
-      component: () => import("@/views/Terms"),
+      path: "/404",
+      component: () => import("@/views/404"),
+      meta: { isPublic: true }
+    },
+    {
+      path: '*',
+      redirect: '/404',
       meta: { isPublic: true }
     }
   ]
