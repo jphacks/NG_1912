@@ -37,7 +37,8 @@ for i in range(5):
                 #jsonを辞書型にする
                 result = json.loads(result)
                 #認識結果のclass(=認識・特定した物体の名前)だけを抽出する。
-                print(result)
+                #print(result['images'][0]['classifiers'][0]['classes'][0]['class'])
+                print("{}".format(result['images'][0]['classifiers'][0]['classes'][0]['class']))
             j+=1
     else:
         print('No face')
