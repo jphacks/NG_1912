@@ -17,3 +17,8 @@ djangorestframework==3.10.3  # https://github.com/encode/django-rest-framework
 django-filter==2.2.0  # https://github.com/carltongibson/django-filter
 django-rest-auth==0.9.5 # https://github.com/Tivix/django-rest-auth
 django-extra-fields==1.2.4  # https://github.com/Hipo/drf-extra-fields
+
+# IBM Watson Recognition
+# ------------------------------------------------------------------------------
+ibm_cloud_sdk_core==1.0.0
+ibm_watson==4.0.1

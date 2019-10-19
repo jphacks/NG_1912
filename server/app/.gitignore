@@ -17,5 +17,5 @@ db.sqlite3
 .envs/*
 !.envs/.local/
 
-app/media/media/*
-!app/media/media/.gitkeep
+app/media/*
+!app/media/.gitkeep

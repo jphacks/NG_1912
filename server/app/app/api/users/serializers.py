@@ -7,8 +7,10 @@ from rest_auth.serializers import LoginSerializer, UserDetailsSerializer
 from rest_framework import serializers
 from app.users.models import User
 from django.conf import settings
-from drf_extra_fields.fields import Base64ImageField
-from django.core.files.base import ContentFile
+from ibm_watson import VisualRecognitionV3
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+import zipfile
+import glob
 
 class CustomLoginSerializer(LoginSerializer):
     email = serializers.EmailField()
@@ -32,6 +34,29 @@ class CustomRegisterSerializer(RegisterSerializer):
             'images': self.validated_data.get('images', '')
         }
 
+    def ibm_learning(self, user_id, LEARNING_DATA_DIR_PATH):
+        MEDIA_ROOT = getattr(settings, 'MEDIA_ROOT')
+
+        ZIP_PATH = os.path.join(MEDIA_ROOT,
+                                ''.join(random.choices(string.ascii_letters + string.digits, k=10)) + '.zip')
+        with zipfile.ZipFile(ZIP_PATH, 'w') as z:
+            for img_path in glob.glob(os.path.join(LEARNING_DATA_DIR_PATH, '*.jpg')):
+                z.write(img_path, arcname=os.path.basename(img_path))
+
+        IBM_IAMAUTHENTICATOR = getattr(settings, 'IBM_IAMAUTHENTICATOR')
+        IBM_CLASSIFIER_ID = getattr(settings, 'IBM_CLASSIFIER_ID')
+
+        authenticator = IAMAuthenticator(IBM_IAMAUTHENTICATOR)
+        visual_recognition = VisualRecognitionV3(
+            version='2018-03-19',
+            authenticator=authenticator
+        )
+        with open(ZIP_PATH, 'rb') as dalmatian:
+            visual_recognition.update_classifier(
+                classifier_id=IBM_CLASSIFIER_ID,
+                positive_examples={user_id: dalmatian},
+                negative_examples=None).get_result()
+
     def save(self, request):
         user = super(CustomRegisterSerializer, self).save(request)
         data = self.cleaned_data
@@ -42,7 +67,6 @@ class CustomRegisterSerializer(RegisterSerializer):
         os.mkdir(TARGET_IMG_DIR)
 
         for encodeImage in data.get('images'):
-            print(encodeImage)
             TARGET_IMG_PATH = os.path.join(TARGET_IMG_DIR,
                                            ''.join(random.choices(string.ascii_letters + string.digits, k=10)) + '.jpg')
             _, encodeImage = encodeImage.split(",")
@@ -50,6 +74,7 @@ class CustomRegisterSerializer(RegisterSerializer):
             with open(TARGET_IMG_PATH, 'bw') as f:
                 f.write(base64.b64decode(encodeImage.encode()))
 
+        self.ibm_learning(user.id, TARGET_IMG_DIR)
         return user
 
 
