@@ -5,6 +5,7 @@ import datetime
 import time
 from watson_developer_cloud import VisualRecognitionV3
 from matplotlib import pyplot as plt
+from dotenv import load_dotenv
 import json
 import collections
 
