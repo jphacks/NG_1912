@@ -11,7 +11,7 @@ app_name = "api"
 
 router = routers.DefaultRouter()
 # router.register('foods', FoodViewSet)
-router.register('payments', PaymentViewSet)
+router.register('payments', PaymentViewSet, base_name='payments')
 router.register('users', UserViewSet)
 
 urlpatterns = [

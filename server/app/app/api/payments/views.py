@@ -6,8 +6,12 @@ from app.users.models import User
 
 
 class PaymentViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return user.payments.all()
+
 
 
 class UserEatInView(generics.CreateAPIView):
