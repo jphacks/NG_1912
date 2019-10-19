@@ -8,11 +8,12 @@ from matplotlib import pyplot as plt
 from dotenv import load_dotenv
 import json
 import collections
+import setting
 
 visual_recognition = VisualRecognitionV3(
     #The release date of the version of the API you want to use.
     '2018-03-19',
-    iam_apikey='ysXWcNeqrTKGhaTPiaz7zC6E-G7hXVYea_2IGMnCM9nf')
+    iam_apikey=setting.APIKEY)
 
 cap = cv2.VideoCapture(0)
 HAAR_FILE = "C:/Users/sd16067/Documents/jpHacks/opencv/data/haarcascades/haarcascade_frontalface_alt2.xml"
@@ -46,7 +47,7 @@ def face_detect(frame,face):
             classes = visual_recognition.classify(
             images_file,
             threshold='0.6',
-            classifier_ids=["ZeseiCustomer_1325062844"]).get_result()
+            classifier_ids=setting.clICs).get_result()
             #unicodeで返ってくるので、utf-8に変換する。
             result = json.dumps(classes, indent=2).encode('utf-8').decode('unicode_escape')
             #jsonを辞書型にする
@@ -71,7 +72,7 @@ def face_detect(frame,face):
 def five_time_check():
     namelist=[]
     for i in range(5):
-        ret, frame = cap.read(1)
+        ret, frame = cap.read(0)
         face = cascade.detectMultiScale(frame)
         if len(face)>0:
             #print(face)
