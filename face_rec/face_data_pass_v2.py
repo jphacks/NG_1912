@@ -52,9 +52,6 @@ def face_detect(frame,face):
             result = json.dumps(classes, indent=2).encode('utf-8').decode('unicode_escape')
             #jsonを辞書型にする
             result = json.loads(result)
-            #認識結果のclass(=認識・特定した物体の名前)だけを抽出する。
-
-            #print(result)
 
             if len(result['images'][0]['classifiers'][0]['classes'])>0:
                 #print("{}".format(result['images'][0]['classifiers'][0]['classes'][0]['class']))
@@ -92,6 +89,7 @@ def five_time_check():
     return namedic
 
 def send_namelist(namelist):
+    # TODO : here
     print(namelist)
 
 def main():
