@@ -39,8 +39,8 @@
 
                         <div class="form-group">
                             <label class="text-info">顔画像登録</label>
-                            <b-button v-b-modal.captureFacesModal class="ml-3" @click="captureFace" v-if="images.length !== 10" variant="info">登録する</b-button>
-                            <b-button v-b-modal.captureFacesModal class="ml-3" @click="captureFace" v-else variant="info">再登録する</b-button>
+                            <b-button v-b-modal.captureFacesModal class="ml-3" @click="captureFace" v-if="images.length !== 10" variant="info">顔画像を登録する</b-button>
+                            <b-button v-b-modal.captureFacesModal class="ml-3" @click="captureFace" v-else variant="primary">顔画像を再登録する</b-button>
                         </div>
 
                         <button class="btn btn-info">登録する</button>
@@ -54,13 +54,27 @@
 
         <b-modal id="captureFacesModal"
                  ref="captureFacesModal"
+                 @hidden="clearImages"
                  @shown="captureVideos"
                  @ok="captureFace"
                  ok-title="撮影"
                  @hide="stopVideos"
-                 title="撮影する">
-            <video id="captureVideo" class="w-100"></video>
-            <canvas id="captureImg" class="w-100" style="display: none"></canvas>
+                 :title= "'撮影 (' + images.length + '/10)'">
+                <div class="text-center">矢印の方向を向き写真を取ってください (矢印の表示がない時は正面を向いてください)</div>
+            <b-row>
+                <b-col cols="1"><span v-if="images.length===1">&#8598;</span></b-col>
+                <b-col cols="10" class="text-center"><span v-if="images.length===2">&#8593;</span></b-col>
+                <b-col cols="1"><span v-if="images.length===3">&nearr;</span></b-col>
+                <b-col cols="1" class="d-flex align-items-center"><span v-if="images.length===4">&#8592;</span></b-col>
+                <b-col cols="10">
+                    <video id="captureVideo" class="w-100"></video>
+                    <canvas id="captureImg" class="w-100" style="display: none"></canvas>
+                </b-col>
+                <b-col cols="1" class="d-flex align-items-center"><span v-if="images.length===5">&#8594;</span></b-col>
+                <b-col cols="1"><span v-if="images.length===6">&#8601;</span></b-col>
+                <b-col cols="10" class="text-center"><span v-if="images.length===7">&#8595;</span></b-col>
+                <b-col cols="1"><span v-if="images.length===8">&#8600;</span></b-col>
+            </b-row>
         </b-modal>
 
     </div>
@@ -113,6 +127,11 @@
                     .catch(function(err) {
                         console.log("[JPHacks KMF] " + err)
                     });
+            },
+            clearImages(){
+                if (this.images.length < 10){
+                    this.images = []
+                }
             },
             stopVideos(trigger) {
                 if(trigger.trigger !== 'ok'){
