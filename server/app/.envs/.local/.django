@@ -5,6 +5,7 @@ DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
 DJANGO_SECRET_KEY=idxDd1O8CIVLQamOGahw54N1SNtIXGcYztmslXIwz5MFyP2WOdNFYI6qeAnTgOXt
 DJANGO_SETTINGS_MODULE=config.settings.local
 USE_DOCKER=yes
+DJANGO_ADMIN_URL=admin/
 
 # Redis
 # ------------------------------------------------------------------------------
@@ -15,3 +16,9 @@ CELERY_BROKER_URL=redis://redis:6379/1
 # ------------------------------------------------------------------------------
 IBM_IAMAUTHENTICATOR=
 IBM_CLASSIFIER_ID=
+
+# AWS
+# ------------------------------------------------------------------------------
+DJANGO_AWS_ACCESS_KEY_ID=
+DJANGO_AWS_SECRET_ACCESS_KEY=
+DJANGO_AWS_STORAGE_BUCKET_NAME=
