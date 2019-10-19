@@ -19,7 +19,6 @@ class PaymentChoiceSerializer(serializers.HyperlinkedModelSerializer):
 
 class PaymentSerializer(serializers.HyperlinkedModelSerializer):
     choices = serializers.SerializerMethodField()
-    price = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Payment
@@ -27,3 +26,7 @@ class PaymentSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_choices(self, obj):
         return PaymentChoiceSerializer(obj.choices.all(), many=True).data
+
+
+class UserRecognitionSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField(write_only=True)
