@@ -10,7 +10,7 @@ zesei
 Docker上で開発を行うために以下の準備を行います
 ```bash
 docker-compose up -d
-docker-compose exec django sh
+make djangosh
 
 # install python3 Library
 pip intsall -r requirements/local.txt
@@ -27,7 +27,7 @@ python3 merge_dotenvs_in_dotenv.py
 ### database command
 ```bash
 #  migrate
-python3 manage.py makemigrations courses payments foods users --settings config.settings.local
+python3 manage.py makemigrations payments foods users --settings config.settings.local
 python3 manage.py migrate --settings config.settings.local
 
 # データベース中の全データの削除

@@ -1,8 +1,14 @@
+import os
+import random
+import string
+import base64
 from rest_auth.registration.serializers import RegisterSerializer
 from rest_auth.serializers import LoginSerializer, UserDetailsSerializer
 from rest_framework import serializers
 from app.users.models import User
-
+from django.conf import settings
+from drf_extra_fields.fields import Base64ImageField
+from django.core.files.base import ContentFile
 
 class CustomLoginSerializer(LoginSerializer):
     email = serializers.EmailField()
@@ -11,6 +17,10 @@ class CustomLoginSerializer(LoginSerializer):
 class CustomRegisterSerializer(RegisterSerializer):
     first_name = serializers.CharField(max_length=30)
     last_name = serializers.CharField(max_length=150)
+    images = serializers.ListField(
+        child=serializers.CharField(),
+        allow_empty=False
+    )
 
     def get_cleaned_data(self):
         return {
@@ -19,7 +29,28 @@ class CustomRegisterSerializer(RegisterSerializer):
             'email': self.validated_data.get('email', ''),
             'first_name': self.validated_data.get('first_name', ''),
             'last_name': self.validated_data.get('last_name', ''),
+            'images': self.validated_data.get('images', '')
         }
+
+    def save(self, request):
+        user = super(CustomRegisterSerializer, self).save(request)
+        data = self.cleaned_data
+
+        MEDIA_ROOT = getattr(settings, 'MEDIA_ROOT')
+        TARGET_IMG_DIR = os.path.join(MEDIA_ROOT,
+                                      str(user.id))
+        os.mkdir(TARGET_IMG_DIR)
+
+        for encodeImage in data.get('images'):
+            print(encodeImage)
+            TARGET_IMG_PATH = os.path.join(TARGET_IMG_DIR,
+                                           ''.join(random.choices(string.ascii_letters + string.digits, k=10)) + '.jpg')
+            _, encodeImage = encodeImage.split(",")
+
+            with open(TARGET_IMG_PATH, 'bw') as f:
+                f.write(base64.b64decode(encodeImage.encode()))
+
+        return user
 
 
 class CustomUserDetailsSerializer(UserDetailsSerializer):

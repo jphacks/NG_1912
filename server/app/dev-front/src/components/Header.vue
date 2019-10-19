@@ -1,13 +1,11 @@
 <template>
-    <nav id="header" class="navbar navbar-dark bg-dark navbar-expand-md">
+    <b-navbar id="header" toggleable="lg" type="dark" variant="info">
+        <b-navbar-brand v-if="!isAuthenticated" :to="{name: 'root'}">zesei</b-navbar-brand>
+        <b-navbar-brand v-else :to="{name: 'home'}">zesei</b-navbar-brand>
 
-        <router-link v-if="!isAuthenticated" class="navbar-brand" :to="{name: 'root'}">e-learning</router-link>
-        <router-link v-else class="navbar-brand" :to="{name: 'home'}">e-learning</router-link>
+        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <b-collapse id="nav-collapse" is-nav>
             <ul class="navbar-nav mr-auto"></ul>
 
             <ul v-if="!isAuthenticated" class="navbar-nav">
@@ -19,8 +17,9 @@
                 <li class="nav-item"><router-link :to="{name: 'user'}" class="nav-link">プロフィール更新</router-link></li>
                 <li class="nav-item"><a class="nav-link" @click="logout">ログアウト</a></li>
             </ul>
-        </div>
-    </nav>
+        </b-collapse>
+    </b-navbar>
+
 </template>
 
 <script>
@@ -34,7 +33,7 @@
         methods: {
             logout() {
                 this.$store.dispatch(LOGOUT).then(() => {
-                   this.$router.push({name: "root"})
+                    this.$router.push({name: "root"})
                 });
             }
         }

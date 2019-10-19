@@ -7,7 +7,7 @@ build:
 ps:
 	docker-compose ps
 
-rsh:
+djangosh:
 	docker-compose exec django sh
 dbsh:
 	docker-compose exec mysql sh
