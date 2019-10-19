@@ -11,6 +11,8 @@ from ibm_watson import VisualRecognitionV3
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 import zipfile
 import glob
+from datetime import datetime
+
 
 class CustomLoginSerializer(LoginSerializer):
     email = serializers.EmailField()
@@ -52,10 +54,17 @@ class CustomRegisterSerializer(RegisterSerializer):
             authenticator=authenticator
         )
         with open(ZIP_PATH, 'rb') as dalmatian:
-            visual_recognition.update_classifier(
+            classifiers = visual_recognition.update_classifier(
                 classifier_id=IBM_CLASSIFIER_ID,
                 positive_examples={user_id: dalmatian},
                 negative_examples=None).get_result()
+
+            ROOT_DIR = getattr(settings, 'ROOT_DIR')
+            IBM_HISTORY_FILE_PATH = os.path.join(ROOT_DIR, "ibm_history.txt")
+            with open(IBM_HISTORY_FILE_PATH, "a") as output_file:
+                history = "[" + datetime.now().strftime("%Y/%m/%d %H:%M:%S") + "] " + str(classifiers)
+                output_file.write(history)
+                output_file.write(os.linesep)
 
     def save(self, request):
         user = super(CustomRegisterSerializer, self).save(request)
