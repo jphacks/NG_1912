@@ -4,6 +4,7 @@
 
 gunicorn==19.9.0  # https://github.com/benoitc/gunicorn
 PyMySQL==0.9.3  # https://github.com/PyMySQL/PyMySQL
+mysqlclient==1.4.4  # https://github.com/PyMySQL/mysqlclient-python
 Collectfast==1.0.0  # https://github.com/antonagestam/collectfast
 
 # Django

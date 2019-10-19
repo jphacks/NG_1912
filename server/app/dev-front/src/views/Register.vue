@@ -37,6 +37,12 @@
                             <input v-model="password2" type="password" id="password2" placeholder="パスワード確認" class="form-control" required>
                         </div>
 
+                        <div class="form-group">
+                            <label class="text-info">顔画像登録</label>
+                            <b-button v-b-modal.captureFacesModal class="ml-3" @click="captureFace" v-if="images.length !== 10" variant="info">登録する</b-button>
+                            <b-button v-b-modal.captureFacesModal class="ml-3" @click="captureFace" v-else variant="info">再登録する</b-button>
+                        </div>
+
                         <button class="btn btn-info">登録する</button>
 
                         <hr>
@@ -45,6 +51,18 @@
                 </div>
             </div>
         </div>
+
+        <b-modal id="captureFacesModal"
+                 ref="captureFacesModal"
+                 @shown="captureVideos"
+                 @ok="captureFace"
+                 ok-title="撮影"
+                 @hide="stopVideos"
+                 title="撮影する">
+            <video id="captureVideo" class="w-100"></video>
+            <canvas id="captureImg" class="w-100" style="display: none"></canvas>
+        </b-modal>
+
     </div>
 </template>
 
@@ -61,7 +79,8 @@
                 password1: "",
                 password2: "",
                 first_name: "",
-                last_name: ""
+                last_name: "",
+                images: []
             }
         },
         computed: {
@@ -79,11 +98,53 @@
                         password2: this.password2,
                         first_name: this.first_name,
                         last_name: this.last_name,
-                        gender: this.gender,
-                        age: this.age,
-                        pref: this.pref
+                        images: this.images,
                     })
                     .then(() => this.$router.push({name: "root"}))
+            },
+            captureVideos() {
+                let video = document.getElementById('captureVideo');
+                let constrains = { video: true };
+                navigator.mediaDevices.getUserMedia(constrains)
+                    .then(function(stream) {
+                        video.srcObject = stream; // streamはユーザーのカメラとマイクの情報で、これをvideoの入力ソースにする
+                        video.play();
+                    })
+                    .catch(function(err) {
+                        console.log("[JPHacks KMF] " + err)
+                    });
+            },
+            stopVideos(trigger) {
+                if(trigger.trigger !== 'ok'){
+                    let video = document.getElementById('captureVideo');
+                    let stream = video.srcObject;
+
+                    stream.getTracks().forEach(function(track) {
+                        track.stop();
+                    });
+                }
+            },
+            captureFace(bvModalEvt) {
+                bvModalEvt.preventDefault();
+
+                if (this.images.length === 10){
+                    this.images = []
+                }
+
+                let video = document.getElementById('captureVideo');
+                let canvas = document.getElementById("captureImg");
+                canvas.setAttribute('width', video.videoWidth);
+                canvas.setAttribute('height', video.videoHeight);
+
+                canvas.getContext("2d").drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+                let dataURI = canvas.toDataURL("image/jpeg");
+                this.images.push(dataURI);
+
+                this.$nextTick(() => {
+                    if (this.images.length === 10){
+                        this.$refs['captureFacesModal'].hide();
+                    }
+                });
             }
         }
     }

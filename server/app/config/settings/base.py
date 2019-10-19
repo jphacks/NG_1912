@@ -282,3 +282,7 @@ REST_FRAMEWORK = {
     'NON_FIELD_ERRORS_KEY': 'errors'
 }
 
+# IBM Watson Visual Recognition
+# ------------------------------------------------------------------------------
+IBM_IAMAUTHENTICATOR = env("IBM_IAMAUTHENTICATOR")
+IBM_CLASSIFIER_ID = env("IBM_CLASSIFIER_ID")

@@ -10,3 +10,8 @@ USE_DOCKER=yes
 # ------------------------------------------------------------------------------
 REDIS_URL=redis://redis:6379/0
 CELERY_BROKER_URL=redis://redis:6379/1
+
+# IBM Watson Visual Recognition
+# ------------------------------------------------------------------------------
+IBM_IAMAUTHENTICATOR=
+IBM_CLASSIFIER_ID=
