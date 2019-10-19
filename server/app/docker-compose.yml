@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  django: &django
+    build:
+      context: ./compose/local/django
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+      - redis
+    links:
+      - mysql:mysql
+      - redis:redis
+    command: "sh"
+    tty: true
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    ports:
+      - "0.0.0.0:8000:8000"
+      - "0.0.0.0:8080:8080"
+
+  mysql:
+    image: mysql:8.0.17
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=my-secret-pw
+      - MYSQL_DATABASE=jphacks
+
+  redis:
+    image: redis:5.0.6-alpine
+    restart: unless-stopped
+
+#  celeryworker:
+#    <<: *django
+#    image: app_local_celeryworker
+#    depends_on:
+#      - redis
+#      - postgres
+#
+#    ports: []
+#    command: /start-celeryworker
+#
+#  celerybeat:
+#    <<: *django
+#    image: app_local_celerybeat
+#    depends_on:
+#      - redis
+#      - postgres
+#
+#    ports: []
+#    command: /start-celerybeat

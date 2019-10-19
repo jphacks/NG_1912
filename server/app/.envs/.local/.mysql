@@ -1,0 +1,7 @@
+# MySQL
+# ------------------------------------------------------------------------------
+MYSQL_HOST=mysql
+MYSQL_PORT=3306
+MYSQL_DB=jphacks
+MYSQL_USER=root
+MYSQL_PASSWORD=my-secret-pw
