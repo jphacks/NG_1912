@@ -21,7 +21,7 @@ class UserEatInView(generics.CreateAPIView):
         data = serializer.validated_data
         user = User.objects.get(id=data['user_id'])
         payment = Payment.objects.filter(user=user).order_by('-id')[0]
-        if not payment.is_completed:
+        if self.request.user.is_staff and not payment.is_completed:
             payment.tax_rate = 10
             payment.save()
 
@@ -36,7 +36,7 @@ class UserStoreExitView(generics.CreateAPIView):
         data = serializer.validated_data
         user = User.objects.get(id=data['user_id'])
         payment = Payment.objects.filter(user=user).order_by('-id')[0]
-        if not payment.is_completed:
+        if self.request.user.is_staff and not payment.is_completed:
             payment.is_completed = True
             payment.save()
 
