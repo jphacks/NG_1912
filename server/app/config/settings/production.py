@@ -55,6 +55,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
 )
 
 # STORAGES
+
 # ------------------------------------------------------------------------------
 # https://django-storages.readthedocs.io/en/latest/#installation
 INSTALLED_APPS += ["storages"]  # noqa F405
@@ -76,6 +77,7 @@ AWS_S3_OBJECT_PARAMETERS = {
 AWS_DEFAULT_ACL = None
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
 AWS_S3_REGION_NAME = env("DJANGO_AWS_S3_REGION_NAME", default=None)
+AWS_SESSION_TOKEN=env("DJANGO_AWS_SESSION_TOKEN")
 # STATIC
 # ------------------------
 STATICFILES_STORAGE = "config.settings.production.StaticRootS3Boto3Storage"
