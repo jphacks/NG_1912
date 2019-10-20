@@ -12,7 +12,7 @@ from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 import zipfile
 import glob
 from datetime import datetime
-
+import shutil
 
 class CustomLoginSerializer(LoginSerializer):
     email = serializers.EmailField()
@@ -65,6 +65,8 @@ class CustomRegisterSerializer(RegisterSerializer):
                 history = "[" + datetime.now().strftime("%Y/%m/%d %H:%M:%S") + "] " + str(classifiers)
                 output_file.write(history)
                 output_file.write(os.linesep)
+            os.remove(ZIP_PATH)
+            shutil.rmtree(LEARNING_DATA_DIR_PATH)
 
     def save(self, request):
         user = super(CustomRegisterSerializer, self).save(request)

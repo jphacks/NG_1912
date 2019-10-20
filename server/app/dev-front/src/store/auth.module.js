@@ -56,7 +56,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             ApiService.post("auth/registration", credentials)
                 .then(({ data }) => {
-                    alert(data.detail);
+                    alert("登録しました。");
                     resolve(data);
                 })
                 .catch(({ response }) => {
