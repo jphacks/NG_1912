@@ -1,6 +1,6 @@
 # ZESEI
 
-[![ZESEI](image.jpg)](https://www.youtube.com/watch?v=G5rULR53uMk)
+[![ZESEI](image.jpg)](https://youtu.be/yaZLitWf8wE)
 
 ## 製品概要
 ### 軽減税率 * Tech
