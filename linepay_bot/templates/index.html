@@ -1,0 +1,68 @@
+{% extends "bootstrap/base.html" %}
+
+{%- block metas %}
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+{%- endblock metas %}
+
+{% block scripts %}
+{{super()}}
+{% endblock %}
+
+{% block title %}Pay Sample{% endblock %}
+
+{% block content %}
+<div id="liffdata">
+  <h1 id="displaynamefield"></h1>
+    <!-- <button onclick="reserve_userid()" class="btn btn-danger btn-block" name="userid" value={$useridfield}>LINE Payで支払い</button> -->
+    <h2>{{data}}の購入リンクを表示します</h2>
+    <h3>お待ち下さい...</h3>
+  </div>
+<!-- liff SDK -->
+<script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
+<script>
+  var userId = "not_using_liff";
+  window.onload = function (e) {
+    // init で初期化。基本情報を取得。
+    // https://developers.line.me/ja/reference/liff/#initialize-liff-app
+    liff.init(function (data) {
+      userId = data.context.userId
+      reserve_userid()
+      getProfile();
+      initializeApp(data);
+    });
+  };
+  function reserve_userid(){
+    //alert(window.location.hostname)
+    $.ajax({
+          type: 'POST',
+          url: "https://" + window.location.hostname + '/reserve/'+userId+"/"+"{{data}}",
+
+          success: function (res, status) {
+            location.href = res
+          },
+          error: function (res) {
+              alert('failure')
+          }
+      })
+  };
+
+  // プロファイルの取得と表示
+  function getProfile(){
+    // https://developers.line.me/ja/reference/liff/#liffgetprofile()
+    liff.getProfile().then(function (profile) {
+      document.getElementById('displaynamefield').textContent = profile.displayName + 'さんのページ';
+    }).catch(function (error) {
+      window.alert("Error getting profile: " + error);
+    });
+  }
+
+  function initializeApp(data) {
+    var target = document.getElementById('useridfield')
+    target.textContent = data.context.userId;
+    target.method = "post";
+    taget.submit();
+  }
+
+</script>
+
+{% endblock %}
