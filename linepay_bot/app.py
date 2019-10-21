@@ -12,11 +12,18 @@ from linebot.models import (
     TextSendMessage,
     FlexSendMessage,
     BubbleContainer,
-    StickerSendMessage
+    StickerSendMessage,
+    QuickReply,
+    QuickReplyButton,
+    MessageAction,
+    URIAction,
+    TemplateSendMessage,
+    ButtonsTemplate,
+    PostbackAction
 )
 
-access_token = os.environ["ACCESS_TOKEN"]
-bot_secret = os.environ["BOT_SECRET"]
+access_token = "QOWpUISg/uvJVpPk25KsJwyrBwrvq7ltCxHE0TRjxlfABMwg5pDa3jmAaoKIgmhU9YPZBF97NSpewbDNff1XEEyVymF6Ob0MPqqeBqIX2pCZ9Q7ugEdmE6zAtmmF7t0Bn/78DU+XaTtcq8YZ+I+MHwdB04t89/1O/w1cDnyilFU="
+bot_secret = "0f5a26663f1b87d3265a89a858d565ca"
 line_bot_api = LineBotApi(access_token)
 handler = WebhookHandler(bot_secret)
 app = Flask(__name__, static_folder='static')
@@ -88,7 +95,7 @@ class LinePay(object):
 
 # get it in https://pay.line.me/jp/developers/techsupport/sandbox/creation?locale=ja_JP
 chennel_id = '1653356129'
-channel_secret = os.environ["LINE_PAY_CHANNEL_SECRET"]
+channel_secret = '7081575736c14da990811be96fce8637'
 callback_url = '/callback'
 
 """
@@ -102,8 +109,6 @@ pay = LinePay(chennel_id, channel_secret, callback_url)
 @app.route("/")
 def render_index():
     item_id = request.args.get("itemName")
-    if item_id == None:
-        item_id = "コーラ"
     return render_template('index.html', data=item_id)
 
 @app.route("/app")
@@ -167,11 +172,12 @@ def return_bot():
         if userId == "Udeadbeefdeadbeefdeadbeefdeadbeef":
             return "OK"
         handler.handle(body, signature)
+
         # with open("alert.json", "r", encoding="utf-8") as f:
         #     json_data = json.load(f)
         #     syohin = data["events"][0]["message"]["text"]
         #     print(syohin)
-        #     json_data["footer"]["contents"][0]["action"]["uri"] = "line://app/1653356763-y5x3nxO4"
+        #     json_data["footer"]["contents"][0]["action"]["uri"] = "line://app/1653356763-y5x3nxO4&itemName=" + syohin
         #     line_bot_api.push_message(
         #         userId,
         #             [
@@ -189,9 +195,26 @@ def return_bot():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    buttons_template_message = TemplateSendMessage(
+        alt_text='お支払いの連絡',
+        template=ButtonsTemplate(
+            thumbnail_image_url='https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png',
+            title='お支払いの連絡',
+            text='LinePayでお支払いを完了してください',
+            actions=[
+                URIAction(
+                    label='LINEPayで支払い',
+                    uri="line://app/1653356763-y5x3nxO4?itemName="+event.message.text
+                )
+            ]
+        )
+    )
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text= "line://app/1653356763-y5x3nxO4?itemName="+event.message.text))
+        buttons_template_message
+    )
+
+
 
 @app.errorhandler(400)
 def handler_error_400(error):
